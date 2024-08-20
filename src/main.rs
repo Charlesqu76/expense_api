@@ -25,9 +25,13 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(Logger::default())
             .app_data(web::Data::new(pool.clone()))
-            .service(web::scope("/api").configure(route::expense::config))
+            .service(
+                web::scope("/api")
+                    .configure(route::expense::config)
+                    .configure(route::category::config),
+            )
     })
-    .bind("127.0.0.1:3000")?
+    .bind("127.0.0.1:3001")?
     .run()
     .await
 }

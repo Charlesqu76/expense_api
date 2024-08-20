@@ -1,5 +1,5 @@
 // src/models.rs
-use chrono::NaiveDate;
+use chrono::{NaiveDate, NaiveDateTime};
 use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 
@@ -7,8 +7,8 @@ use sqlx::FromRow;
 pub struct Expense {
     pub id: i32,
     pub amount: f64,
-    pub date: NaiveDate,
-    pub category_id: Option<i32>,
+    pub date: NaiveDateTime,
+    pub category_id: i32,
     pub description: Option<String>,
 }
 
@@ -16,8 +16,20 @@ pub struct Expense {
 pub struct NewExpense {
     pub amount: f64,
     pub date: NaiveDate,
-    pub category_id: Option<i32>,
+    pub category_id: i32,
     pub description: Option<String>,
 }
 
-// Add similar structures for Category and PaymentMethod
+#[derive(Serialize, Deserialize, FromRow, Debug)]
+pub struct Category {
+    pub id: i32,
+    pub name: String,
+    pub category: String,
+    pub create_at: NaiveDateTime,
+}
+
+#[derive(Serialize, Deserialize, FromRow, Debug)]
+pub struct NewCategory {
+    pub name: String,
+    pub category: String,
+}
