@@ -21,6 +21,15 @@ pub struct NewExpense {
 }
 
 #[derive(Serialize, Deserialize, FromRow, Debug)]
+pub struct UpdateExpense {
+    pub id: i32,
+    pub amount: f64,
+    pub date: NaiveDateTime,
+    pub category_id: i32,
+    pub description: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, FromRow, Debug)]
 pub struct Category {
     pub id: i32,
     pub name: String,

@@ -1,4 +1,4 @@
-use crate::models::{Expense, NewExpense};
+use crate::models::{Expense, NewExpense, UpdateExpense};
 use actix_web::{get, post, web, HttpResponse, Responder};
 use log::error;
 use sqlx::PgPool;
@@ -41,6 +41,41 @@ async fn create_expense(
 
     match result {
         Ok(expense) => HttpResponse::Created().json(expense),
+        Err(_) => HttpResponse::InternalServerError().finish(),
+    }
+}
+
+#[post("update")]
+async fn update_expense(
+    pool: web::Data<PgPool>,
+    new_expense: web::Json<UpdateExpense>,
+) -> impl Responder {
+    let result = sqlx::query_as::<_, Expense>(
+        "UPDATE expense.expense SET amount = $1, date = $2, description = $3, category_id = $4 WHERE id = $5",
+    )
+    .bind(new_expense.amount)
+    .bind(new_expense.date)
+    .bind(&new_expense.description)
+    .bind(&new_expense.category_id)
+    .bind(&new_expense.id)
+    .fetch_one(pool.get_ref())
+    .await;
+
+    match result {
+        Ok(expense) => HttpResponse::Ok().json(expense),
+        Err(_) => HttpResponse::InternalServerError().finish(),
+    }
+}
+
+#[post("delete")]
+async fn delete_expense(pool: web::Data<PgPool>, id: web::Json<i32>) -> impl Responder {
+    let result = sqlx::query("DELETE FROM expense.expense WHERE id = $1")
+        .bind(id.0)
+        .execute(pool.get_ref())
+        .await;
+
+    match result {
+        Ok(_) => HttpResponse::Ok().json(id.0),
         Err(_) => HttpResponse::InternalServerError().finish(),
     }
 }
