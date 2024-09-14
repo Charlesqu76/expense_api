@@ -5,7 +5,7 @@ use env_logger::Env;
 use sqlx::postgres::PgPoolOptions;
 use std::env;
 
-mod models;
+mod model;
 mod route;
 // mod util;
 

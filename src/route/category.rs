@@ -1,5 +1,4 @@
-// src/routes/expenses.rs
-use crate::models::{Category, NewCategory};
+use crate::model::category::{Category, NewCategory};
 use actix_web::{get, post, web, HttpResponse, Responder};
 use log::error;
 use sqlx::PgPool;

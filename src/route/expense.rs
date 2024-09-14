@@ -1,4 +1,4 @@
-use crate::models::{Expense, NewExpense, UpdateExpense};
+use crate::model::expense::{Expense, NewExpense};
 use actix_web::{get, post, web, HttpResponse, Responder};
 use log::error;
 use sqlx::PgPool;
@@ -48,7 +48,7 @@ async fn create_expense(
 #[post("update")]
 async fn update_expense(
     pool: web::Data<PgPool>,
-    new_expense: web::Json<UpdateExpense>,
+    new_expense: web::Json<Expense>,
 ) -> impl Responder {
     let result = sqlx::query_as::<_, Expense>(
         "UPDATE expense.expense SET amount = $1, date = $2, description = $3, category_id = $4 WHERE id = $5",
