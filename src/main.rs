@@ -1,3 +1,4 @@
+use actix_cors::Cors;
 // src/main.rs
 use actix_web::{middleware::Logger, web, App, HttpServer};
 use dotenv::dotenv;
@@ -25,6 +26,7 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())
+            .wrap(Cors::permissive())
             .app_data(web::Data::new(pool.clone()))
             .service(
                 web::scope("/api")
